@@ -1,0 +1,6 @@
+Main Part of the Project is user can create Post 
+    -> Login & Register
+    -> logout
+    -> Post creation
+    -> Post like
+    -> Posta Delete (Only for owner)
