@@ -26,9 +26,10 @@ app.get('/login', (req, res) => {
 })
 
 // Procected Route
-app.get('/profile', isLoggedIn, (req, res) => {
-    console.log(req.user);
-    res.send("Welcome to your profile")
+app.get('/profile', isLoggedIn, async (req, res) => {
+    let user = await userModel.findOne({ email: req.user.email })
+
+    res.render('profile', { user })
 })
 
 // Create a Register Route
@@ -74,7 +75,7 @@ app.post('/login', async (req, res) => {
         if (result) {
             let token = jwt.sign({ email: email, userId: user._id }, "lima")
             res.cookie('token', token)
-            res.status(200).send("You can login")
+            res.status(200).redirect("/profile")
         } else res.redirect('/login')
     })
 })
@@ -87,11 +88,11 @@ app.get('/logout', (req, res) => {
 
 // Create a Protacted Route
 function isLoggedIn(req, res, next) {
-    if (req.cookies.token === "") res.send("Not Authorized")
+    if (req.cookies.token === "") res.redirect("/login")
     else {
         let data = jwt.verify(req.cookies.token, "lima");
         req.user = data
-        next() 
+        next()
     }
 }
 
