@@ -32,6 +32,19 @@ app.get('/profile', isLoggedIn, async (req, res) => {
     res.render('profile', { user })
 })
 
+// Create Like Route
+app.get('/like/:id', isLoggedIn, async (req, res) => {
+    // Finding the post and populating the user field to get the user details
+    let post = await postModel.findOne({ _id: req.params.id }).populate('user')
+
+    // Pushing the user id to the likes array of the post
+    post.likes.push(req.user.userId)
+    // Saving the post
+    await post.save()
+    // Redirecting to the profile page
+    res.redirect("/profile")
+})
+
 // Create a post Route
 app.post('/post', isLoggedIn, async (req, res) => {
     // Finding the user
