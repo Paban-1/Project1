@@ -27,9 +27,31 @@ app.get('/login', (req, res) => {
 
 // Procected Route
 app.get('/profile', isLoggedIn, async (req, res) => {
-    let user = await userModel.findOne({ email: req.user.email })
+    let user = await userModel.findOne({ email: req.user.email }).populate('posts')
 
     res.render('profile', { user })
+})
+
+// Create a post Route
+app.post('/post', isLoggedIn, async (req, res) => {
+    // Finding the user
+    let user = await userModel.findOne({
+        email: req.user.email
+    })
+    // Destructuring the request body
+    let { content } = req.body
+
+    // Create a new post
+    let post = await postModel.create({
+        user: user._id,
+        content,
+    })
+
+    // Give user the post id
+    user.posts.push(post._id)
+    await user.save()
+
+    res.redirect('/profile')
 })
 
 // Create a Register Route
