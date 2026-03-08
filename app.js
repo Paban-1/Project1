@@ -37,8 +37,14 @@ app.get('/like/:id', isLoggedIn, async (req, res) => {
     // Finding the post and populating the user field to get the user details
     let post = await postModel.findOne({ _id: req.params.id }).populate('user')
 
-    // Pushing the user id to the likes array of the post
-    post.likes.push(req.user.userId)
+    // Checking if the user has already liked the post or not
+    if (post.likes.indexOf(req.user.userId) === -1) {
+        // Pushing the user id to the likes array of the post
+        post.likes.push(req.user.userId)
+    } else {
+        // Removing the user id from the likes array of the post
+        post.likes.splice(post.likes.indexOf(req.user.userId), 1)
+    }
     // Saving the post
     await post.save()
     // Redirecting to the profile page

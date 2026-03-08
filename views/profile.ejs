@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
     <title>Document</title>
 </head>
 
@@ -40,10 +41,17 @@
                         <p class="text-sm tracking-tighter">
                             <%= post.content %>
                         </p>
-                        <div class="btns flex mt-5 justify-between">
-                            <a class="text-blue-500" href="/like/<%= post._id %>">Like</a>
 
-                            <a class="text-zinc-400" href="">Edit</a>
+                        <!-- Showing likes count -->
+                        <small class="mt-8 inline-block text-red-500"><i class="ri-heart-2-fill"></i>
+                            <%= post.likes.length %> likes
+                        </small>
+                        <div class="btns flex mt-2 justify-between">
+                            <a class="text-blue-500" href="/like/<%= post._id %>">
+                                <%= post.likes.indexOf(user._id)===-1 ? "like" : "unlike" %>
+                            </a>
+
+                            <a class="text-zinc-400" href="/edit/<%= post._id %>">Edit</a>
                         </div>
                     </div>
                     <% }) %>
