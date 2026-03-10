@@ -51,6 +51,23 @@ app.get('/like/:id', isLoggedIn, async (req, res) => {
     res.redirect("/profile")
 })
 
+// Create Edit Route
+app.get('/edit/:id', isLoggedIn, async (req, res) => {
+    // Finding the post and populating the user field to get the user details
+    let post = await postModel.findOne({ _id: req.params.id }).populate('user')
+
+    // rendering the edit page and passing the post details to the page
+    res.render('edit', { post })
+})
+
+app.post("/update/:id", isLoggedIn, async (req, res) => {
+    // Finding the post and populating the user field to get the user details
+    let post = await postModel.findOneAndUpdate({ _id: req.params.id }, { content: req.body.content })
+
+    // Redirecting to the profile page
+    res.redirect('/profile')
+})
+
 // Create a post Route
 app.post('/post', isLoggedIn, async (req, res) => {
     // Finding the user
